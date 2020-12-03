@@ -1,0 +1,25 @@
+[02-Dec-2020 14:55:58 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\xampp\htdocs\classroom\students1\public\index.php(30): Core\Router->dispatch('favicon.ico')
+#1 {main}
+Thrown in 'C:\xampp\htdocs\classroom\students1\Core\Router.php' on line 141
+[02-Dec-2020 14:56:04 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\xampp\htdocs\classroom\students1\public\index.php(30): Core\Router->dispatch('boards/1/')
+#1 {main}
+Thrown in 'C:\xampp\htdocs\classroom\students1\Core\Router.php' on line 141
+[02-Dec-2020 14:56:12 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\xampp\htdocs\classroom\students1\public\index.php(30): Core\Router->dispatch('boards/1/boards...')
+#1 {main}
+Thrown in 'C:\xampp\htdocs\classroom\students1\Core\Router.php' on line 141
+[02-Dec-2020 14:56:13 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\xampp\htdocs\classroom\students1\public\index.php(30): Core\Router->dispatch('boards/1/boards...')
+#1 {main}
+Thrown in 'C:\xampp\htdocs\classroom\students1\Core\Router.php' on line 141
+[02-Dec-2020 14:57:15 Europe/Berlin] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\xampp\htdocs\classroom\students1\public\index.php(30): Core\Router->dispatch('boards')
+#1 {main}
+Thrown in 'C:\xampp\htdocs\classroom\students1\Core\Router.php' on line 141
+[02-Dec-2020 14:58:44 Europe/Berlin] Uncaught exception: 'ErrorException' with message 'Undefined index: action'
+Stack trace: #0 C:\xampp\htdocs\classroom\students1\Core\Router.php(126): Core\Error::errorHandler(8, 'Undefined index...', 'C:\\xampp\\htdocs...', 126, Array)
+#1 C:\xampp\htdocs\classroom\students1\public\index.php(31): Core\Router->dispatch('boards')
+#2 {main}
+Thrown in 'C:\xampp\htdocs\classroom\students1\Core\Router.php' on line 126

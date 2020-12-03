@@ -1,0 +1,19 @@
+{
+    "name": "sasce1974/students1",
+    "description": "Board - Students - Grades",
+    "authors": [
+        {
+            "name": "Aleksandar Ardjanliev",
+            "email": "sasce1974@yahoo.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Core\\": "Core/",
+            "App\\": "App/"
+        }
+    }
+}
