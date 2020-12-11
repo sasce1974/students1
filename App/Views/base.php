@@ -1,3 +1,13 @@
+<?php
+
+try {
+    $token = bin2hex(random_bytes(64));
+    if(isset($_SESSION['token'])) unset($_SESSION['token']);
+    $_SESSION['token'] = $token;
+} catch (Exception $e) {
+    print $e->getMessage();
+}
+?>
 <!doctype html>
 <html lang="en-US">
 <head>
@@ -23,3 +33,30 @@
     <a href="/boards/1/students">Board 1</a> |
     <a href="/boards/2/students">Board 2</a>
 </nav>
+
+<div class="p-3">
+    <?php
+    if(isset($_SESSION['error']) && !empty($_SESSION['error'])){
+        ?>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>ERROR! </strong> <?php print $_SESSION['error']; ?>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <?php
+    }
+
+    if(isset($_SESSION['message']) && !empty($_SESSION['message'])){
+        ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>SUCCESS! </strong> <?php print $_SESSION['message']; ?>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <?php
+    }
+    $_SESSION['error'] = $_SESSION['message'] = null;
+    ?>
+</div>

@@ -18,6 +18,7 @@ include $base_page;
                 <input type="number" min="5" max="10" name="grade"
                        class="form-control">
                 <input type="hidden" value="<?php echo $student->id; ?>" name="student_id">
+                <input type="hidden" name="token" value="<?php print $token; ?>">
             </td>
             <td><button type="submit" class="btn btn-outline-success">Insert</button></td>
         </form>
@@ -38,6 +39,7 @@ include $base_page;
             <td><form action="/grades/destroy" method="post">
                     <input type="hidden" name="student_id" value="<?php echo $student->id; ?>">
                     <input type="hidden" name="grade_id" value="<?php echo $grade['id']; ?>">
+                    <input type="hidden" name="token" value="<?php print $token; ?>">
                     <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                 </form>
             </td>
@@ -46,22 +48,22 @@ include $base_page;
     <tr class="font-weight-bold">
         <?php
         if($board->id == 1){
-            $ag = $averageGrade;
+            //$ag = $averageGrade;
             ?>
             <td class="text-right">Average Grade:</td>
-            <td><?php print round($ag, 2); ?></td>
-            <td><?php print $ag < 7 ?
+            <td><?php print round($averageGrade, 2); ?></td>
+            <td><?php print $averageGrade < 7 ?
                     '<div class="text-danger">Failed</div>' :
                     '<div class="text-success">Passed</div>'; ?>
             </td>
         <?php }else{
-            $hg = $maxGrade;
+            //$hg = $maxGrade;
             ?>
             <td class="text-right">Highest Grade:</td>
-            <td><?php print $hg; ?></td>
+            <td><?php print $maxGrade; ?></td>
             <td>
                 <?php
-                if(count($grades) > 2 && $hg >= 8){
+                if(count($grades) > 2 && $maxGrade >= 8){
                     print 'Passed';
                 }else{
                     print 'Failed';

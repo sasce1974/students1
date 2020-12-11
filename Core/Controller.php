@@ -27,6 +27,11 @@ abstract class Controller
     public function __construct($route_params)
     {
         $this->route_params = $route_params;
+        if (session_id() == "") {
+            if(!headers_sent()) {
+                session_start();
+            }
+        }
     }
 
     /**

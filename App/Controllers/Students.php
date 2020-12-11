@@ -41,12 +41,13 @@ class Students extends Controller
     public function create(){
         $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
         $board_id = filter_input(INPUT_POST, 'board_id', FILTER_SANITIZE_NUMBER_INT, ['min'=>1]);
-
+        $token = filter_input(INPUT_POST, 'token', FILTER_SANITIZE_STRING);
         if(!empty($name)){
-            /*if($data['token'] !== $_SESSION['token']){
+            if($token !== $_SESSION['token']){
                 $_SESSION['error'] = "Token mismatch (session token is: " . $_SESSION['token'] . ")";
+                throw new \Exception('Token Error');
                 return false;
-            }*/
+            }
             //$user = new Student();
             $r = Student::create(['board_id'=>$board_id, 'name'=>$name]);
             if($r){
@@ -66,7 +67,11 @@ class Students extends Controller
     }
 
     public function destroy(){
-        //check token
+        $token = filter_input(INPUT_POST, 'token', FILTER_SANITIZE_STRING);
+        if($token !== $_SESSION['token']){
+            $_SESSION['error'] = "Token mismatch (session token is: " . $_SESSION['token'] . ")";
+            throw new \Exception('Token Error');
+        }
         $id = filter_var($this->route_params['id'], FILTER_SANITIZE_NUMBER_INT, ['min'=>1]);
         $r = Student::delete($id);
         if($r){
@@ -77,5 +82,16 @@ class Students extends Controller
         }else{
             throw new \Exception('Error In Student Deletion Process');
         }
+    }
+
+
+    public function getAllAction(){
+        $students = new Student();
+
+        print "<pre>";
+        //var_dump($students->all());
+        var_dump($students->some(2));
+        print "</pre>";
+
     }
 }

@@ -22,7 +22,7 @@ class Grade extends Model
     }
 
 
-    private static function grade($id){
+    public static function grade($id){
         $grades = self::studentGrades($id);
         $g = array();
         foreach ($grades as $grade){
@@ -75,5 +75,82 @@ class Grade extends Model
         }catch (PDOException $e){
             print $e->getMessage();
         }
+    }
+
+
+    public static function export($board_id)
+    {
+        $users = Student::byBoard($board_id, true);
+        foreach ($users as $student){
+
+            if($board_id === 1){
+                $student['final_result'] = ($student['averageGrade'] < 7) ? 'Failed' : 'Passed';
+            }else{
+                $student['final_result'] = (count($student['grades']) > 2 && $student['maxGrade'] >= 8) ? 'Passed' : 'Failed';
+            }
+        }
+        //print "<pre>"; print_r($users); print "</pre>"; exit();
+        /*$data = array();
+
+        for ($i = 0; $i < count($users); $i++) {
+            $grades = $user->grade($users[$i]->id);
+            $average = $user->averageGrade($users[$i]->id);
+            $maxGrade = $user->maxGrade($users[$i]->id);
+            $data[$i]['user']['id'] = $users[$i]->id;
+            $data[$i]['user']['name'] = $users[$i]->name;
+            $data[$i]['grades'] = $grades;
+            $data[$i]['average'] = $average;
+
+            if ($board_id === 1) {
+                $data[$i]['final result'] = ($average < 7) ?
+                    'Failed' : 'Passed';
+            } else {
+                $data[$i]['final result'] = (count($grades) > 2 &&
+                    $maxGrade >= 8) ?
+                    'Passed' : 'Failed';
+            }
+
+        }*/
+
+        if ($board_id == 1) {
+            return json_encode($users);
+        } else {
+            return self::arrayToXML($users);
+        }
+    }
+
+
+    private static function arrayToXML(array $data){
+
+        $xml_data = new \SimpleXMLElement('<data></data>');
+
+        function array_to_xml($data, &$xml_data ) {
+            foreach( $data as $key => $value ) {
+                if( is_array($value) ) { //if $value is array, make recursive function
+                    if( is_numeric($key) ){
+                        $key = 'item'.$key;
+                    }
+                    $xml_data->addChild($key);
+                    array_to_xml($value,$xml_data);
+                } else {
+                    $xml_data->addChild($key, htmlspecialchars("$value"));
+                }
+            }
+        }
+
+
+
+        //array_walk_recursive($data, array ($xml_data, 'addChild'));
+
+        array_to_xml($data,$xml_data);
+return $xml_data->asXML();
+
+        /*$xml = $xml_data;
+        $dom = new \DOMDocument('1.0');
+        $dom->preserveWhiteSpace = true;
+        $dom->formatOutput = true;
+        $dom->loadXML($xml);
+        $dom->saveXML();*/
+
     }
 }

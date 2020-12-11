@@ -17,18 +17,32 @@ class Grades extends Controller
             FILTER_SANITIZE_NUMBER_INT,
             ['min'=>1]);
 
-        if(count(Grade::studentGrades($student_id)) > 3) throw new \Exception('There are already 4 grades for this student');
+        $token = filter_input(INPUT_POST, 'token', FILTER_SANITIZE_STRING);
+        if($token !== $_SESSION['token']){
+            $_SESSION['error'] = "Token mismatch";
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+            exit(403);
+            //throw new \Exception('Token Error');
+        }
+        if(count(Grade::studentGrades($student_id)) > 3){
+            $_SESSION['error'] = 'There are already 4 grades for this student';
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+            exit(403);
+        }
 
         if(!empty($grade) && !empty($student_id)){
 
             $r = Grade::create($student_id, $grade);
             if($r){
                 $_SESSION['message'] = "Grade Inserted";
-                header('Location: ' . $_SERVER['HTTP_REFERER']);
             }else{
-                throw new \Exception('Grade not inserted');
+                $_SESSION['error'] = 'Grade not inserted';
             }
+
+        }else{
+            $_SESSION['error'] = 'Please insert Grade';
         }
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
     }
 
     public function destroy(){
@@ -39,18 +53,29 @@ class Grades extends Controller
             FILTER_SANITIZE_NUMBER_INT,
             ['min'=>1]);
 
+        $token = filter_input(INPUT_POST, 'token', FILTER_SANITIZE_STRING);
+        if($token !== $_SESSION['token']){
+            $_SESSION['error'] = "Token mismatch";
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+            exit(403);
+        }
+
         if(!empty($grade_id) && !empty($student_id)){
-            //token...
             $r = Grade::delete($grade_id, $student_id);
 
             if($r){
                 $_SESSION['message'] = "Grade Deleted";
-                header('Location: ' . $_SERVER['HTTP_REFERER']);
             }else{
-                throw new \Exception('Grade not deleted');
+                $_SESSION['error'] ='Grade not deleted';
             }
         }else{
-            throw new \Exception('Student ID or Grade ID not provided');
+            $_SESSION['error'] ='Student ID or Grade ID not provided';
         }
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+    }
+
+    public function exportAction(){
+        $id = filter_var($this->route_params['id'], FILTER_SANITIZE_NUMBER_INT, ['min'=>1]);
+        print htmlspecialchars((string)Grade::export($id));//print with htmlspecialchars to get view tags in xml
     }
 }

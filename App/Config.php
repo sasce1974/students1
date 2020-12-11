@@ -28,12 +28,12 @@ class Config
      * Database password
      * @var string
      */
-    const DB_PASSWORD = 'secret';
+    const DB_PASSWORD = 'qSmU9JdK3kdx4W2';
 
     /**
      * Show or hide error messages on screen
      * @var boolean
      */
-    const SHOW_ERRORS = false;
+    const SHOW_ERRORS = true;
 
 }
