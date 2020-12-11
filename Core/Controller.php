@@ -5,8 +5,6 @@ namespace Core;
 
 /**
  * Base controller
- *
- * PHP version 5.4
  */
 abstract class Controller
 {
@@ -55,7 +53,6 @@ abstract class Controller
                 $this->after();
             }
         } else {
-            //echo "Method $method not found in controller " . get_class($this);
             throw new \Exception("Method $method not found in controller " .
                 get_class($this));
         }

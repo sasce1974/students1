@@ -18,14 +18,14 @@ class Students extends Controller
 
     public function showAction(){
         $id = filter_var($this->route_params['id'], FILTER_SANITIZE_NUMBER_INT, ['min'=>1]);
-        $student = Student::show($id);
-        //$board_id = filter_var($this->route_params['id'], FILTER_SANITIZE_NUMBER_INT, ['min'=>1]);
-        $board = Board::board($student->board_id);
+
+        $student = new Student();
+        $student = $student->find($id);
+        $board = new Board();
+        $board = $board->find($student->board_id);
         $grades = Grade::studentGrades($student->id);
         $averageGrade = Grade::averageGrade($student->id);
         $maxGrade = Grade::maxGrade($student->id);
-
-        //var_dump($maxGrade); exit();
 
         View::render('Students/index.php', [
             'board'=>$board,
@@ -42,12 +42,13 @@ class Students extends Controller
         $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
         $board_id = filter_input(INPUT_POST, 'board_id', FILTER_SANITIZE_NUMBER_INT, ['min'=>1]);
         $token = filter_input(INPUT_POST, 'token', FILTER_SANITIZE_STRING);
+        if($token !== $_SESSION['token']){
+            $_SESSION['error'] = "Token mismatch";
+            header('Location:' . $_SERVER['HTTP_REFERER']);
+            exit(403);
+        }
         if(!empty($name)){
-            if($token !== $_SESSION['token']){
-                $_SESSION['error'] = "Token mismatch (session token is: " . $_SESSION['token'] . ")";
-                throw new \Exception('Token Error');
-                return false;
-            }
+
             //$user = new Student();
             $r = Student::create(['board_id'=>$board_id, 'name'=>$name]);
             if($r){
@@ -57,12 +58,11 @@ class Students extends Controller
             }else{
                 //$_SESSION['error'] = "Error In Student Creation Process";
                 throw new \Exception('Error In Student Creation Process');
-                return false;
             }
         }else{
-            throw new \Exception('Please Insert Student Name');
+            //throw new \Exception('Please Insert Student Name');
             $_SESSION['error'] = "Please Insert Student Name";
-            return false;
+            //return false;
         }
     }
 
@@ -90,7 +90,7 @@ class Students extends Controller
 
         print "<pre>";
         //var_dump($students->all());
-        var_dump($students->some(2));
+        var_dump($students->find(26)->toArray());
         print "</pre>";
 
     }

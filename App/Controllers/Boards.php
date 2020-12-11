@@ -5,7 +5,6 @@ namespace App\Controllers;
 
 
 use App\Models\Board;
-use App\Models\Student;
 use Core\Controller;
 use Core\View;
 
@@ -27,11 +26,11 @@ class Boards extends Controller
         }else {
 
             $id = filter_var($this->route_params['id'], FILTER_SANITIZE_NUMBER_INT, ['min' => 1]);
-            $board = Board::board($id);
-            $students = Student::byBoard($id);
+            $board = new Board();
+            $board = $board->find($id);
             View::render("Boards/board.php", [
                 'board' => $board,
-                'students' => $students
+                'students' => $board->students
             ]);
         }
     }

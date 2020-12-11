@@ -28,10 +28,10 @@ try {
 
 </head>
 <body>
-<nav>
-    <a href="/">Home</a> |
-    <a href="/boards/1/students">Board 1</a> |
-    <a href="/boards/2/students">Board 2</a>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="nav-link" href="/">Home</a> |
+    <a class="nav-link" href="/boards/1/students">Board 1</a> |
+    <a class="nav-link" href="/boards/2/students">Board 2</a>
 </nav>
 
 <div class="p-3">

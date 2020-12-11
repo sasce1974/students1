@@ -26,7 +26,7 @@ abstract class Model implements iModel
      *
      * @var array
      */
-    //protected $collection = [];
+
 
     /**
      * Model constructor.
@@ -38,7 +38,8 @@ abstract class Model implements iModel
     public function __construct($object = null)
     {
         if($this->table == "") {
-            $this->table = lcfirst(get_class($this)) . 's'; // table name as Model class name + 's'
+            $this->table = lcfirst((new \ReflectionClass(get_class($this)))->getShortName()) . "s";
+            //$this->table = lcfirst(get_class($this)) . 's'; // table name as Model class name + 's'
         }
         $this->model = get_class($this);
 
@@ -99,10 +100,7 @@ abstract class Model implements iModel
 
             $models = $query->fetchAll(PDO::FETCH_OBJ);
             foreach ($models as $model){
-                //$class = $this->model;// 'App/Models/Student'
-                //$class = (new \ReflectionClass($this->model))->getShortName(); // 'Student'
-               // $model = new $class($model); // Initialize model
-                //Collection::add($model);
+
                 $this->collect($model);
             }
             return Collection::getCollection();
@@ -122,9 +120,7 @@ abstract class Model implements iModel
             $models = $query->fetchAll(PDO::FETCH_CLASS, $this->model);
             //FETCH_CLASS returns class models but methods values are not initialized
             foreach ($models as $model){
-                //$class = $this->model;// 'App/Models/Student'
-                //$model = new $class($model);
-                //Collection::add($model);
+
                 $this->collect($model);
             }
             return Collection::getCollection();
@@ -134,34 +130,56 @@ abstract class Model implements iModel
     }
 
 
-
+    /**
+     * Create collection of objects
+     *
+     * Model is been instantiated and initialized by provided @param $model
+     * then added to collection array
+     *
+     * @param $model
+     */
     protected function collect($model):void
     {
         $class = $this->model;
         $model = new $class($model);
-        Collection::add($model);
+        if (is_object($model) && $model instanceof $class) Collection::add($model);
     }
 
 
-
-    function whereId($value){
+    /**
+     * Return instance of model by given ID
+     *
+     * @param $id
+     * @return $this
+     */
+    function find($id){
+        $con = self::getDB();
         $q = "SELECT * FROM $this->table WHERE id = ?";
-        $query = $this->con->prepare($q);
-        $query->execute(array($value));
+        $query = $con->prepare($q);
+        $query->execute(array($id));
 
         $model = $query->fetch(PDO::FETCH_OBJ);
         $this->init($model);
-        return $model;
+        return $this;
     }
 
     function where($item, $value){
+        $con = self::getDB();
         $item = filter_var($item, FILTER_SANITIZE_STRING);
         $q = "SELECT * FROM $this->table WHERE $item = ?";
-        $query = $this->con->prepare($q);
+        $query = $con->prepare($q);
         $query->execute(array($value));
 
-        return $query->fetchAll(PDO::FETCH_OBJ);
+        $models = $query->fetchAll(PDO::FETCH_OBJ);
+        foreach ($models as $model){
+
+            $this->collect($model);
+        }
+        return Collection::getCollection();
     }
 
+    public function toArray(){
+        return (array) $this;
+    }
 
 }

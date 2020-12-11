@@ -7,6 +7,6 @@ interface iModel{
     public function all();
     public function some(int $limit);
     public function where($column, $value);
-    public function whereId($value);
+    public function find($value);
 
 }

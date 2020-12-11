@@ -11,6 +11,7 @@ use Core\Collection;
 class Student extends Model
 {
     public $id;
+    public $board_id;
     public $name;
     public $averageGrade;
     public $maxGrade;
@@ -28,6 +29,7 @@ class Student extends Model
     {
         $this->id = $student->id;
         $this->name = $student->name;
+        $this->board_id = $student->board_id;
         $this->grades = $this->grades($student->id);
         $this->averageGrade = $this->averageGrade($student->id);
         $this->maxGrade = $this->maxGrade($student->id);
@@ -77,7 +79,7 @@ class Student extends Model
         }
     }
 
-    public static function show($id){
+    /*public static function show($id){
         try{
             $con = self::getDB();
             $query = "SELECT * FROM users WHERE id = ?";
@@ -91,7 +93,7 @@ class Student extends Model
         }catch (PDOException $e){
             print $e->getMessage();
         }
-    }
+    }*/
 
     public static function create($data){
         try {
