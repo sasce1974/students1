@@ -89,28 +89,6 @@ class Grade extends Model
                 $student['final_result'] = (count($student['grades']) > 2 && $student['maxGrade'] >= 8) ? 'Passed' : 'Failed';
             }
         }
-        //print "<pre>"; print_r($users); print "</pre>"; exit();
-        /*$data = array();
-
-        for ($i = 0; $i < count($users); $i++) {
-            $grades = $user->grade($users[$i]->id);
-            $average = $user->averageGrade($users[$i]->id);
-            $maxGrade = $user->maxGrade($users[$i]->id);
-            $data[$i]['user']['id'] = $users[$i]->id;
-            $data[$i]['user']['name'] = $users[$i]->name;
-            $data[$i]['grades'] = $grades;
-            $data[$i]['average'] = $average;
-
-            if ($board_id === 1) {
-                $data[$i]['final result'] = ($average < 7) ?
-                    'Failed' : 'Passed';
-            } else {
-                $data[$i]['final result'] = (count($grades) > 2 &&
-                    $maxGrade >= 8) ?
-                    'Passed' : 'Failed';
-            }
-
-        }*/
 
         if ($board_id == 1) {
             return json_encode($users);
@@ -138,12 +116,8 @@ class Grade extends Model
             }
         }
 
-
-
-        //array_walk_recursive($data, array ($xml_data, 'addChild'));
-
         array_to_xml($data,$xml_data);
-return $xml_data->asXML();
+        return $xml_data->asXML();
 
         /*$xml = $xml_data;
         $dom = new \DOMDocument('1.0');

@@ -27,12 +27,14 @@ class Student extends Model
      */
     public function init($student)
     {
-        $this->id = $student->id;
-        $this->name = $student->name;
-        $this->board_id = $student->board_id;
-        $this->grades = $this->grades($student->id);
-        $this->averageGrade = $this->averageGrade($student->id);
-        $this->maxGrade = $this->maxGrade($student->id);
+        if(is_object($student)) {
+            $this->id = $student->id;
+            $this->name = $student->name;
+            $this->board_id = $student->board_id;
+            $this->grades = $this->grades($student->id);
+            $this->averageGrade = $this->averageGrade($student->id);
+            $this->maxGrade = $this->maxGrade($student->id);
+        }
     }
 
 

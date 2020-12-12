@@ -20,12 +20,8 @@ abstract class Model implements iModel
     protected $table = "";
 
     protected $model;
+    protected $con = null;
 
-    /**
-     * contains collection of model objects
-     *
-     * @var array
-     */
 
 
     /**
@@ -42,8 +38,9 @@ abstract class Model implements iModel
             //$this->table = lcfirst(get_class($this)) . 's'; // table name as Model class name + 's'
         }
         $this->model = get_class($this);
-
+        $this->con = DB_connection::getCon();
         if($object) $this->init($object);
+
     }
 
 
@@ -64,21 +61,7 @@ abstract class Model implements iModel
      */
     protected static function getDB()
     {
-        static $db = null;
-
-        if ($db === null) {
-
-            $db = new PDO(
-                "mysql:host=" . Config::DB_HOST . ";dbname=" . Config::DB_NAME . ";charset=utf8",
-                Config::DB_USER,
-                Config::DB_PASSWORD
-            );
-            // Throw an Exception when an error occurs
-            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        }
-
-        return $db;
+        return DB_connection::getCon();
     }
 
 
@@ -94,8 +77,8 @@ abstract class Model implements iModel
     function all(){
         try {
             $q = "SELECT * FROM $this->table";
-            $con = self::getDB();
-            $query = $con->prepare($q);
+            //$con = self::getDB();
+            $query = $this->con->prepare($q);
             $query->execute(array($this->table));
 
             $models = $query->fetchAll(PDO::FETCH_OBJ);
@@ -112,10 +95,10 @@ abstract class Model implements iModel
 
     function some($limit){
         try {
-            $q = "SELECT * FROM $this->table LIMIT $limit";
-            $con = self::getDB();
-            $query = $con->prepare($q);
-            $query->execute(array($this->table));
+            $q = "SELECT * FROM $this->table LIMIT ?";
+            //$con = self::getDB();
+            $query = $this->con->prepare($q);
+            $query->execute(array($limit));
 
             $models = $query->fetchAll(PDO::FETCH_CLASS, $this->model);
             //FETCH_CLASS returns class models but methods values are not initialized
@@ -153,21 +136,21 @@ abstract class Model implements iModel
      * @return $this
      */
     function find($id){
-        $con = self::getDB();
+        //$con = self::getDB();
         $q = "SELECT * FROM $this->table WHERE id = ?";
-        $query = $con->prepare($q);
+        $query = $this->con->prepare($q);
         $query->execute(array($id));
-
+        if($query->rowCount() !== 1) return false;
         $model = $query->fetch(PDO::FETCH_OBJ);
         $this->init($model);
         return $this;
     }
 
     function where($item, $value){
-        $con = self::getDB();
+        //$con = self::getDB();
         $item = filter_var($item, FILTER_SANITIZE_STRING);
         $q = "SELECT * FROM $this->table WHERE $item = ?";
-        $query = $con->prepare($q);
+        $query = $this->con->prepare($q);
         $query->execute(array($value));
 
         $models = $query->fetchAll(PDO::FETCH_OBJ);

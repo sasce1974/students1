@@ -16,7 +16,7 @@ class View
      */
     public static function render($view, $args = [])
     {
-        //base_page is template/layout
+        //base_page is template/layout, will be included in views
         $base_page = dirname(__DIR__) . "/App/Views/base.php";
         extract($args, EXTR_SKIP);
 

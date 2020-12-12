@@ -49,21 +49,17 @@ class Students extends Controller
         }
         if(!empty($name)){
 
-            //$user = new Student();
             $r = Student::create(['board_id'=>$board_id, 'name'=>$name]);
             if($r){
                 $_SESSION['message'] = "Student Created";
-                header('Location:' . $_SERVER['HTTP_REFERER']);
-                return true;
             }else{
                 //$_SESSION['error'] = "Error In Student Creation Process";
                 throw new \Exception('Error In Student Creation Process');
             }
         }else{
-            //throw new \Exception('Please Insert Student Name');
             $_SESSION['error'] = "Please Insert Student Name";
-            //return false;
         }
+        header('Location:' . $_SERVER['HTTP_REFERER']);
     }
 
     public function destroy(){
@@ -89,7 +85,6 @@ class Students extends Controller
         $students = new Student();
 
         print "<pre>";
-        //var_dump($students->all());
         var_dump($students->find(26)->toArray());
         print "</pre>";
 
