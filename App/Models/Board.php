@@ -19,7 +19,7 @@ class Board extends Model
         $this->students = $this->students();
     }
 
-    public function students(){
+    private function students(){
         $student = new Student();
         return $student->where('board_id', $this->id);
     }

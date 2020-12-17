@@ -77,16 +77,10 @@ abstract class Model implements iModel
     function all(){
         try {
             $q = "SELECT * FROM $this->table";
-            //$con = self::getDB();
             $query = $this->con->prepare($q);
             $query->execute(array($this->table));
 
-            $models = $query->fetchAll(PDO::FETCH_OBJ);
-            foreach ($models as $model){
-
-                $this->collect($model);
-            }
-            return Collection::getCollection();
+            return $query->fetchAll(PDO::FETCH_CLASS, $this->model);
         }catch (PDOException $e){
             print $e->getMessage();
         }
@@ -96,36 +90,13 @@ abstract class Model implements iModel
     function some($limit){
         try {
             $q = "SELECT * FROM $this->table LIMIT ?";
-            //$con = self::getDB();
             $query = $this->con->prepare($q);
             $query->execute(array($limit));
 
-            $models = $query->fetchAll(PDO::FETCH_CLASS, $this->model);
-            //FETCH_CLASS returns class models but methods values are not initialized
-            foreach ($models as $model){
-
-                $this->collect($model);
-            }
-            return Collection::getCollection();
+            return $query->fetchAll(PDO::FETCH_CLASS, $this->model);
         }catch (PDOException $e){
             print $e->getMessage();
         }
-    }
-
-
-    /**
-     * Create collection of objects
-     *
-     * Model is been instantiated and initialized by provided @param $model
-     * then added to collection array
-     *
-     * @param $model
-     */
-    protected function collect($model):void
-    {
-        $class = $this->model;
-        $model = new $class($model);
-        if (is_object($model) && $model instanceof $class) Collection::add($model);
     }
 
 
@@ -136,29 +107,22 @@ abstract class Model implements iModel
      * @return $this
      */
     function find($id){
-        //$con = self::getDB();
         $q = "SELECT * FROM $this->table WHERE id = ?";
         $query = $this->con->prepare($q);
         $query->execute(array($id));
         if($query->rowCount() !== 1) return false;
-        $model = $query->fetch(PDO::FETCH_OBJ);
+        $query->setFetchMode(PDO::FETCH_CLASS, $this->model);
+        $model = $query->fetch();
         $this->init($model);
         return $this;
     }
 
     function where($item, $value){
-        //$con = self::getDB();
         $item = filter_var($item, FILTER_SANITIZE_STRING);
         $q = "SELECT * FROM $this->table WHERE $item = ?";
         $query = $this->con->prepare($q);
         $query->execute(array($value));
-
-        $models = $query->fetchAll(PDO::FETCH_OBJ);
-        foreach ($models as $model){
-
-            $this->collect($model);
-        }
-        return Collection::getCollection();
+        return $query->fetchAll(PDO::FETCH_CLASS, $this->model);
     }
 
     public function toArray(){

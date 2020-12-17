@@ -19,21 +19,20 @@ include $base_page;
         </form>
     </tr>
     <tr><th>id</th><th>Name</th><th>Average grade</th><td>Delete student</td></tr>
-    <?php
-    //$user = new User();
+<?php
     foreach($students as $student){
-        ?>
-        <tr>
-            <td><?php print $student->id; ?></td>
-            <td><a href="/boards/<?php print $board->id; ?>/students/<?php print $student->id; ?>"><?php print $student->name; ?></a></td>
-            <td><?php print round($student->averageGrade, 2); ?></td>
-            <td><form method="post" action="/students/<?php print $student->id; ?>/destroy">
-                    <input type="hidden" name="token" value="<?php print $token; ?>">
-                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                </form>
-            </td>
-        </tr>
-    <?php } ?>
+?>
+    <tr>
+        <td><?php print $student->id; ?></td>
+        <td><a href="/boards/<?php print $board->id; ?>/students/<?php print $student->id; ?>"><?php print $student->name; ?></a></td>
+        <td><?php print round($student->averageGrade($student->id), 2); ?></td>
+        <td><form method="post" action="/students/<?php print $student->id; ?>/destroy">
+                <input type="hidden" name="token" value="<?php print $token; ?>">
+                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+            </form>
+        </td>
+    </tr>
+<?php } ?>
 </table>
 <div class="text-center">
     <?php

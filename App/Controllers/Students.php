@@ -85,7 +85,7 @@ class Students extends Controller
         $students = new Student();
 
         print "<pre>";
-        var_dump($students->find(26)->toArray());
+        var_dump($students->find(26)->grades($students->id));
         print "</pre>";
 
     }

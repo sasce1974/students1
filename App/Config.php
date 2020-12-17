@@ -33,7 +33,7 @@ class Config
         if(isset(self::$config[$index])){
             return self::$config[$index];
         }else{
-            throw new \Exception("Configuration $index not found", 400);
+            throw new \Exception("Configuration $index not found", 404);
         }
     }
 }

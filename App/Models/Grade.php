@@ -4,30 +4,48 @@
 namespace App\Models;
 
 
+use App\Controllers\Grades;
 use Core\Model;
 use PDO, PDOException;
 
 class Grade extends Model
 {
-    public static function studentGrades($student_id){
-        try{
-            $con = self::getDB();
-            $q = "SELECT * FROM grades WHERE user_id = ?";
-            $query = $con->prepare($q);
-            $query->execute(array($student_id));
-            return $query->fetchAll(PDO::FETCH_ASSOC);
-        }catch (PDOException $e){
+    public $id;
+    public $student_id;
+    public $grade;
+    public $created_at;
+    public $updated_at;
+
+    public function init($grade)
+    {
+        if(is_object($grade)) {
+            $this->id = $grade->id;
+            $this->grade = $grade->grade;
+            $this->student_id = $grade->user_id;
+            $this->created_at = $grade->created_at;
+            $this->updated_at = $grade->updated_at;
+        }
+    }
+
+    public static function studentGrades($student_id)
+    {
+        try {
+            $grades = new Grade();
+            return $grades->where('user_id', $student_id);
+        } catch (PDOException $e) {
             print $e->getMessage();
         }
     }
 
 
-    public static function grade($id){
+    public static function grade($id) : array
+    {
         $grades = self::studentGrades($id);
         $g = array();
         foreach ($grades as $grade){
-            $g[] = $grade['grade'];
+            $g[] = $grade->grade;
         }
+
         return $g;
     }
 

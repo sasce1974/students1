@@ -13,9 +13,6 @@ class Student extends Model
     public $id;
     public $board_id;
     public $name;
-    public $averageGrade;
-    public $maxGrade;
-    public $grades;
 
     protected $table = 'users';
 
@@ -31,9 +28,6 @@ class Student extends Model
             $this->id = $student->id;
             $this->name = $student->name;
             $this->board_id = $student->board_id;
-            $this->grades = $this->grades($student->id);
-            $this->averageGrade = $this->averageGrade($student->id);
-            $this->maxGrade = $this->maxGrade($student->id);
         }
     }
 
@@ -58,13 +52,8 @@ class Student extends Model
             $stmt->execute(array($board_id));
 
             if($toArray === false){
-                $students = $stmt->fetchAll(PDO::FETCH_OBJ);
-                $model = new Student();
-                foreach ($students as $student){
+                $students = $stmt->fetchAll(PDO::FETCH_CLASS, 'App\Models\Student');
 
-                    $model->collect($student);
-                }
-                $students = Collection::getCollection();
             }else {
                 $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 for($i=0;$i<count($students);$i++){
@@ -81,21 +70,6 @@ class Student extends Model
         }
     }
 
-    /*public static function show($id){
-        try{
-            $con = self::getDB();
-            $query = "SELECT * FROM users WHERE id = ?";
-            $stmt = $con->prepare($query);
-            $stmt->execute(array($id));
-            $student = $stmt->fetch(PDO::FETCH_OBJ);
-            $student->averageGrade = self::averageGrade($student->id);
-            $student->maxGrade = self::maxGrade($student->id);
-            $student->grades = self::grades($student->id);
-            return $student;
-        }catch (PDOException $e){
-            print $e->getMessage();
-        }
-    }*/
 
     public static function create($data){
         try {

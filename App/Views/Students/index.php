@@ -29,16 +29,14 @@ include $base_page;
         <th>Delete</th>
     </tr>
     <?php
-    //$user = new User();
-    //$grades = $user->grades($student->id);
     foreach($grades as $grade){
         ?>
         <tr>
-            <td class="text-center"><?php print $grade['grade']; ?></td>
-            <td><?php print date('d.m.Y', strtotime($grade['created_at'])); ?></td>
+            <td class="text-center"><?php print $grade->grade; ?></td>
+            <td><?php print date('d.m.Y', strtotime($grade->created_at)); ?></td>
             <td><form action="/grades/destroy" method="post">
                     <input type="hidden" name="student_id" value="<?php echo $student->id; ?>">
-                    <input type="hidden" name="grade_id" value="<?php echo $grade['id']; ?>">
+                    <input type="hidden" name="grade_id" value="<?php echo $grade->id; ?>">
                     <input type="hidden" name="token" value="<?php print $token; ?>">
                     <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                 </form>
@@ -48,7 +46,6 @@ include $base_page;
     <tr class="font-weight-bold">
         <?php
         if($board->id == 1){
-            //$ag = $averageGrade;
             ?>
             <td class="text-right">Average Grade:</td>
             <td><?php print round($averageGrade, 2); ?></td>
@@ -57,7 +54,6 @@ include $base_page;
                     '<div class="text-success">Passed</div>'; ?>
             </td>
         <?php }else{
-            //$hg = $maxGrade;
             ?>
             <td class="text-right">Highest Grade:</td>
             <td><?php print $maxGrade; ?></td>
