@@ -9,13 +9,24 @@ use App\Models\Grade;
 use App\Models\Student;
 use Core\Controller;
 use Core\View;
+use http\Header;
 
 class Students extends Controller
 {
+    /**
+     * redirects to showAction method
+     */
     public function indexAction(){
         $this->showAction();
     }
 
+    /**
+     * Get the Student and its related data
+     *
+     * @param int id
+     * @throws \Exception
+     * @return void
+     */
     public function showAction(){
         $id = filter_var($this->route_params['id'], FILTER_SANITIZE_NUMBER_INT, ['min'=>1]);
 
@@ -38,6 +49,12 @@ class Students extends Controller
     }
 
 
+    /**
+     * Create new student and redirects back
+     *
+     * @return void
+     * @throws \Exception
+     */
     public function create(){
         $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
         $board_id = filter_input(INPUT_POST, 'board_id', FILTER_SANITIZE_NUMBER_INT, ['min'=>1]);
@@ -62,11 +79,15 @@ class Students extends Controller
         header('Location:' . $_SERVER['HTTP_REFERER']);
     }
 
+    /**
+     * @return bool
+     * @throws \Exception
+     */
     public function destroy(){
         $token = filter_input(INPUT_POST, 'token', FILTER_SANITIZE_STRING);
         if($token !== $_SESSION['token']){
             $_SESSION['error'] = "Token mismatch (session token is: " . $_SESSION['token'] . ")";
-            throw new \Exception('Token Error');
+            throw new \Exception('Token Error', 419);
         }
         $id = filter_var($this->route_params['id'], FILTER_SANITIZE_NUMBER_INT, ['min'=>1]);
         $r = Student::delete($id);
@@ -76,11 +97,14 @@ class Students extends Controller
             header('Location:' . $_SERVER['HTTP_REFERER']);
             return true;
         }else{
-            throw new \Exception('Error In Student Deletion Process');
+            throw new \Exception('Error In Student Deletion Process', 500);
         }
     }
 
 
+    /**
+     * Debug method chaining
+     */
     public function getAllAction(){
         $students = new Student();
 

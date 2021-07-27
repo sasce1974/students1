@@ -71,6 +71,12 @@ class Student extends Model
     }
 
 
+    /**
+     * Creates new student
+     *
+     * @param array $data
+     * @return mixed
+     */
     public static function create($data){
         try {
             $con = self::getDB();
@@ -82,18 +88,42 @@ class Student extends Model
         }
     }
 
+    /**
+     * Get all student grades
+     *
+     * @param $id
+     * @return array
+     */
     public static function grades($id){
         return Grade::grade($id);
     }
 
+    /**
+     * Get student average grade
+     *
+     * @param $id
+     * @return float|int
+     */
     public static function averageGrade($id){
         return Grade::averageGrade($id);
     }
 
+    /**
+     * Get student max grade
+     *
+     * @param $id
+     * @return int|void
+     */
     public static function maxGrade($id){
         return Grade::maxGrade($id);
     }
 
+    /**
+     * Delete student
+     *
+     * @param $id
+     * @return bool
+     */
     public static function delete($id){
         try {
             $con = self::getDB();

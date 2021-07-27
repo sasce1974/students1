@@ -9,6 +9,12 @@ use App\Models\Grade;
 
 class Grades extends Controller
 {
+    /**
+     * Create new resource and redirects back
+     *
+     * @param int 'grade' and 'student_id'
+     * @return void
+     */
     public function create(){
         $grade = filter_input(INPUT_POST, 'grade',
             FILTER_SANITIZE_NUMBER_INT,
@@ -45,6 +51,12 @@ class Grades extends Controller
         header('Location: ' . $_SERVER['HTTP_REFERER']);
     }
 
+    /**
+     * Delete grade and redirects back
+     *
+     * @param int 'grade_id' and 'student_id'
+     * @return void
+     */
     public function destroy(){
         $grade_id = filter_input(INPUT_POST, 'grade_id',
             FILTER_SANITIZE_NUMBER_INT,
@@ -74,6 +86,12 @@ class Grades extends Controller
         header('Location: ' . $_SERVER['HTTP_REFERER']);
     }
 
+    /**
+     * Get grades as JSON or XML data
+     *
+     * @param int board id
+     * @return string
+     */
     public function exportAction(){
         $id = filter_var($this->route_params['id'], FILTER_SANITIZE_NUMBER_INT, ['min'=>1]);
         print htmlspecialchars((string)Grade::export($id));//print with htmlspecialchars to get view tags in xml
